@@ -9,6 +9,8 @@ impl Lexer {
         while let Some(char) = chars.next() {
             match char {
                 '\n' => line_number += 1,
+                '\t' => { chars.next(); },
+                ' ' => { chars.next(); },
                 '(' => println!("LEFT_PAREN {} null", char),
                 ')' => println!("RIGHT_PAREN {} null", char),
                 '{' => println!("LEFT_BRACE {} null", char),
