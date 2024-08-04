@@ -58,6 +58,30 @@ impl Lexer {
                         println!("SLASH {} null", char);
                     }
                 },
+                '"' => {
+                    let mut terminated = false;
+                    let mut string = String::new();
+
+                    while let Some(c) = chars.next() {
+                        if c == '"' {
+                            terminated = true;
+                            break;
+                        }
+
+                        if c == '\n' {
+                            line_number += 1;
+                        }
+
+                        string.push(c);
+                    }
+
+                    if !terminated {
+                        status = 65;
+                        eprintln!("[line {}] Error: Unterminated string.", line_number);
+                    } else {
+                        println!("STRING \"{}\" {}", string, string);
+                    }
+                },
                 _ => {
                     status = 65;
                     eprintln!("[line {}] Error: Unexpected character: {}", line_number, char);
