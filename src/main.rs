@@ -38,6 +38,11 @@ pub fn tokenize(content: &str) {
             ')' => println!("RIGHT_PAREN {} null", char),
             '{' => println!("LEFT_BRACE {} null", char),
             '}' => println!("RIGHT_BRACE {} null", char),
+            '+' => println!("PLUS {} null", char),
+            '-' => println!("MINUS {} null", char),
+            '*' => println!("STAR {} null", char),
+            ',' => println!("COMMA {} null", char),
+            '.' => println!("DOT {} null", char),
             _ => println!("UNKNOWN {} null", char),
         };
     }
