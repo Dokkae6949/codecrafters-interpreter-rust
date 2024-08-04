@@ -1,6 +1,7 @@
 use std::env;
 use std::fs;
 use std::io::{self, Write};
+use std::process::exit;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -22,7 +23,7 @@ fn main() {
                 String::new()
             });
 
-            tokenize(&file_contents);
+            exit(tokenize(&file_contents));
         }
         _ => {
             writeln!(io::stderr(), "Unknown command: {}", command).unwrap();
@@ -31,7 +32,8 @@ fn main() {
     }
 }
 
-pub fn tokenize(content: &str) {
+pub fn tokenize(content: &str) -> i32 {
+    let mut status = 0;
     let mut line_number = 1;
 
     for char in content.chars() {
@@ -47,9 +49,13 @@ pub fn tokenize(content: &str) {
             '.' => println!("DOT {} null", char),
             ';' => println!("SEMICOLON {} null", char),
             '\n' => line_number += 1,
-            _ => println!("[line {}] Error: Unexpected character: {}", line_number, char),
+            _ => {
+                status = 65;
+                eprintln!("[line {}] Error: Unexpected character: {}", line_number, char);
+            },
         };
     }
 
     println!("EOF  null");
+    status
 }
