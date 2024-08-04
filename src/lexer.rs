@@ -27,6 +27,14 @@ impl Lexer {
                         println!("EQUAL {} null", char);
                     }
                 },
+                '!' => {
+                    if chars.peek() == Some(&'=') {
+                        println!("BANG_EQUAL != null");
+                        chars.next();
+                    } else {
+                        println!("BANG {} null", char);
+                    }
+                },
                 _ => {
                     status = 65;
                     eprintln!("[line {}] Error: Unexpected character: {}", line_number, char);
