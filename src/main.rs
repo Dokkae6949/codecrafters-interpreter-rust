@@ -1,7 +1,11 @@
+mod lexer;
+
 use std::env;
 use std::fs;
 use std::io::{self, Write};
 use std::process::exit;
+
+use lexer::*;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -23,39 +27,11 @@ fn main() {
                 String::new()
             });
 
-            exit(tokenize(&file_contents));
+            exit(Lexer::tokenize(&file_contents));
         }
         _ => {
             writeln!(io::stderr(), "Unknown command: {}", command).unwrap();
             return;
         }
     }
-}
-
-pub fn tokenize(content: &str) -> i32 {
-    let mut status = 0;
-    let mut line_number = 1;
-
-    for char in content.chars() {
-        match char {
-            '(' => println!("LEFT_PAREN {} null", char),
-            ')' => println!("RIGHT_PAREN {} null", char),
-            '{' => println!("LEFT_BRACE {} null", char),
-            '}' => println!("RIGHT_BRACE {} null", char),
-            '+' => println!("PLUS {} null", char),
-            '-' => println!("MINUS {} null", char),
-            '*' => println!("STAR {} null", char),
-            ',' => println!("COMMA {} null", char),
-            '.' => println!("DOT {} null", char),
-            ';' => println!("SEMICOLON {} null", char),
-            '\n' => line_number += 1,
-            _ => {
-                status = 65;
-                eprintln!("[line {}] Error: Unexpected character: {}", line_number, char);
-            },
-        };
-    }
-
-    println!("EOF  null");
-    status
 }
