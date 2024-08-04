@@ -43,6 +43,7 @@ pub fn tokenize(content: &str) {
             '*' => println!("STAR {} null", char),
             ',' => println!("COMMA {} null", char),
             '.' => println!("DOT {} null", char),
+            ';' => println!("SEMICOLON {} null", char),
             _ => println!("UNKNOWN {} null", char),
         };
     }
