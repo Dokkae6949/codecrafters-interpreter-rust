@@ -32,6 +32,8 @@ fn main() {
 }
 
 pub fn tokenize(content: &str) {
+    let mut line_number = 1;
+
     for char in content.chars() {
         match char {
             '(' => println!("LEFT_PAREN {} null", char),
@@ -44,7 +46,8 @@ pub fn tokenize(content: &str) {
             ',' => println!("COMMA {} null", char),
             '.' => println!("DOT {} null", char),
             ';' => println!("SEMICOLON {} null", char),
-            _ => println!("UNKNOWN {} null", char),
+            '\n' => line_number += 1,
+            _ => println!("[line {}] Error: Unexpected character: {}", line_number, char),
         };
     }
 
