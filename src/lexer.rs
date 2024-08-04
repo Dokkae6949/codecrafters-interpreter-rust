@@ -21,20 +21,32 @@ impl Lexer {
                 ';' => println!("SEMICOLON {} null", char),
                 '=' => {
                     if chars.peek() == Some(&'=') {
-                        println!("EQUAL_EQUAL == null");
-                        chars.next();
+                        println!("EQUAL_EQUAL {}{} null", char, chars.next().unwrap());
                     } else {
                         println!("EQUAL {} null", char);
                     }
                 },
                 '!' => {
                     if chars.peek() == Some(&'=') {
-                        println!("BANG_EQUAL != null");
-                        chars.next();
+                        println!("BANG_EQUAL {}{} null", char, chars.next().unwrap());
                     } else {
                         println!("BANG {} null", char);
                     }
                 },
+                '<' => {
+                    if chars.peek() == Some(&'=') {
+                        println!("LESS_EQUAL {}{} null", char, chars.next().unwrap());
+                    } else {
+                        println!("LESS {} null", char);
+                    }
+                },
+                '>' => {
+                    if chars.peek() == Some(&'=') {
+                        println!("GREATER_EQUAL {}{} null", char, chars.next().unwrap());
+                    } else {
+                        println!("GREATER {} null", char);
+                    }
+                }
                 _ => {
                     status = 65;
                     eprintln!("[line {}] Error: Unexpected character: {}", line_number, char);
