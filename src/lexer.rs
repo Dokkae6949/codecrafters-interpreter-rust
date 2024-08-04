@@ -49,7 +49,9 @@ impl Lexer {
                 },
                 '/' => {
                     if chars.peek() == Some(&'/') {
-                        while chars.next() != Some('\n') {}
+                        while chars.peek() != Some(&'\n') && chars.peek() != None {
+                            chars.next();
+                        }
                     } else {
                         println!("SLASH {} null", char);
                     }
