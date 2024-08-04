@@ -46,7 +46,14 @@ impl Lexer {
                     } else {
                         println!("GREATER {} null", char);
                     }
-                }
+                },
+                '/' => {
+                    if chars.peek() == Some(&'/') {
+                        while chars.next() != Some('\n') {}
+                    } else {
+                        println!("SLASH {} null", char);
+                    }
+                },
                 _ => {
                     status = 65;
                     eprintln!("[line {}] Error: Unexpected character: {}", line_number, char);
