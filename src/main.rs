@@ -36,6 +36,8 @@ pub fn tokenize(content: &str) {
         match char {
             '(' => println!("LEFT_PAREN {} null", char),
             ')' => println!("RIGHT_PAREN {} null", char),
+            '{' => println!("LEFT_BRACE {} null", char),
+            '}' => println!("RIGHT_BRACE {} null", char),
             _ => println!("UNKNOWN {} null", char),
         };
     }
