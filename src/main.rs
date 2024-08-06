@@ -34,6 +34,7 @@ fn main() {
             for token in tokens.iter() {
                 match &token.kind {
                     TokenKind::Eof => println!("EOF  null"),
+                    TokenKind::Error(msg) => println!("{}", msg),
                     TokenKind::LeftParen => println!("LEFT_PAREN ( null"),
                     TokenKind::RightParen => println!("RIGHT_PAREN ) null"),
                     TokenKind::LeftBrace => println!("LEFT_BRACE {{ null"),

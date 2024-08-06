@@ -23,6 +23,7 @@ pub enum Keyword {
 #[derive(Debug, Clone, PartialEq)]
 pub enum TokenKind {
     Eof,
+    Error(String),
     LeftParen,
     RightParen,
     LeftBrace,
@@ -63,7 +64,7 @@ impl Token {
 impl Lexer {
     pub fn tokenize(content: &str) -> Result<Vec<Token>, i32> {
         let mut status = 0;
-        let mut line_number = 1;
+        let mut line_number: u64 = 1;
         let mut chars = content.chars().peekable();
         let mut tokens: Vec<Token> = Vec::new();
 
@@ -139,7 +140,7 @@ impl Lexer {
                         tokens.push(Token::new(TokenKind::String(string.clone()), string));
                     } else {
                         status = 65;
-                        eprintln!("[line {}] Error: Unterminated string.", line_number);
+                        tokens.push(Token::new(TokenKind::Error(format!("[line {}] Error: Unterminated string.", line_number)), "".to_string()));
                     }
                 },
                 '0'..='9' => {
@@ -202,7 +203,7 @@ impl Lexer {
                 },
                 _ => {
                     status = 65;
-                    eprintln!("[line {}] Error: Unexpected character: {}", line_number, char);
+                    tokens.push(Token::new(TokenKind::Error(format!("[line {}] Error: Unexpected character: {}", line_number, char)), "".to_string()));
                 }
             }
         }
