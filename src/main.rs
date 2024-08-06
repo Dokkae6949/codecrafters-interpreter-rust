@@ -1,4 +1,5 @@
 mod lexer;
+mod parser;
 
 use std::env;
 use std::fs;
@@ -6,11 +7,12 @@ use std::io::{self, Write};
 use std::process::exit;
 
 use lexer::*;
+use parser::*;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
     if args.len() < 3 {
-        writeln!(io::stderr(), "Usage: {} tokenize <filename>", args[0]).unwrap();
+        writeln!(io::stderr(), "Usage: {} tokenize|evaluate <filename>", args[0]).unwrap();
         return;
     }
 
@@ -19,16 +21,39 @@ fn main() {
 
     match command.as_str() {
         "tokenize" => {
-            // You can use print statements as follows for debugging, they'll be visible when running tests.
-            writeln!(io::stderr(), "Logs from your program will appear here!").unwrap();
-
             let file_contents = fs::read_to_string(filename).unwrap_or_else(|_| {
                 writeln!(io::stderr(), "Failed to read file {}", filename).unwrap();
                 String::new()
             });
 
-            exit(Lexer::tokenize(&file_contents));
+            match Lexer::tokenize(&file_contents) {
+                Ok(_) => exit(0),
+                Err(status) => exit(status)
+            };
         }
+        "evaluate" => {
+            let file_contents = fs::read_to_string(filename).unwrap_or_else(|_| {
+                writeln!(io::stderr(), "Failed to read file {}", filename).unwrap();
+                String::new()
+            });
+
+            let tokens = match Lexer::tokenize(&file_contents) {
+                Ok(tokens) => tokens,
+                Err(status) => exit(status)
+            };
+
+            let expression = match Parser::parse(tokens) {
+                Some(expr) => expr,
+                None => exit(1)
+            };
+
+            match expression {
+                Expression::Literal(literal) => match literal {
+                    Literal::Nil => println!("nil"),
+                    Literal::Bool(value) => println!("{}", value),
+                },
+            };
+        },
         _ => {
             writeln!(io::stderr(), "Unknown command: {}", command).unwrap();
             return;
