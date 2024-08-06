@@ -23,7 +23,6 @@ pub enum Keyword {
 #[derive(Debug, Clone, PartialEq)]
 pub enum TokenKind {
     Eof,
-
     LeftParen,
     RightParen,
     LeftBrace,
@@ -137,7 +136,6 @@ impl Lexer {
                     }
 
                     if terminated {
-                        println!("STRING \"{}\" {}", string, string);
                         tokens.push(Token::new(TokenKind::String(string.clone()), string));
                     } else {
                         status = 65;
