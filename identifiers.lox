@@ -1,3 +1,7 @@
-fn _test() {
-  print(25.8, 90);
+fun _test() {
+  if is_cool() or is_nice() and is_cute() {
+    print(25.8, 90);
+  }
+
+  return 20;
 }

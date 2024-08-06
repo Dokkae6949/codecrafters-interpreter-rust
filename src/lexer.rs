@@ -122,7 +122,25 @@ impl Lexer {
                         chars.next();
                     }
 
-                    println!("IDENTIFIER {} null", identifier);
+                    match identifier.as_str() {
+                        "and" => println!("AND {} null", identifier),
+                        "class" => println!("CLASS {} null", identifier),
+                        "else" => println!("ELSE {} null", identifier),
+                        "false" => println!("FALSE {} null", identifier),
+                        "for" => println!("FOR {} null", identifier),
+                        "fun" => println!("FUN {} null", identifier),
+                        "if" => println!("IF {} null", identifier),
+                        "nil" => println!("NIL {} null", identifier),
+                        "or" => println!("OR {} null", identifier),
+                        "print" => println!("PRINT {} null", identifier),
+                        "return" => println!("RETURN {} null", identifier),
+                        "super" => println!("SUPER {} null", identifier),
+                        "this" => println!("THIS {} null", identifier),
+                        "true" => println!("TRUE {} null", identifier),
+                        "var" => println!("VAR {} null", identifier),
+                        "while" => println!("WHILE {} null", identifier),
+                        _ => println!("IDENTIFIER {} null", identifier)
+                    }
                 },
                 _ => {
                     status = 65;
