@@ -120,7 +120,7 @@ impl Lexer {
             }
         }
 
-        println!("EOF null");
+        println!("EOF  null");
         status
     }
 }
