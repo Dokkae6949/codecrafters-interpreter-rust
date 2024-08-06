@@ -113,6 +113,17 @@ impl Lexer {
                         println!("NUMBER {} {}", number, parsed);
                     }
                 },
+                'a'..='z' | 'A'..='Z' | '_' => {
+                    let mut identifier = char.to_string();
+
+                    while let Some(&c) = chars.peek() {
+                        if !c.is_ascii_alphanumeric() && c != '_' { break }
+                        identifier.push(c);
+                        chars.next();
+                    }
+
+                    println!("IDENTIFIER {} null", identifier);
+                },
                 _ => {
                     status = 65;
                     eprintln!("[line {}] Error: Unexpected character: {}", line_number, char);
