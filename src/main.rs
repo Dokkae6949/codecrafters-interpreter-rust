@@ -99,10 +99,10 @@ fn main() {
             };
 
             match expression {
-                Expression::Literal(literal) => match literal {
-                    Literal::Nil => println!("nil"),
-                    Literal::Bool(value) => println!("{}", value),
-                },
+                Expression::Literal(Literal::Nil) => println!("nil"),
+                Expression::Literal(Literal::Bool(bool)) => println!("{}", bool),
+                Expression::Literal(Literal::String(str)) => println!("{}", str),
+                Expression::Literal(Literal::Number(num)) => println!("{}", num),
             };
         },
         _ => {
