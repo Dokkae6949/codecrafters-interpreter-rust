@@ -20,10 +20,12 @@ impl Evaluator {
                     TokenKind::Bang => {
                         if let Expression::Literal(Token {kind: TokenKind::Number(_), lexeme}) = result {
                             Ok(Expression::Literal(Token::new(TokenKind::Keyword(Keyword::False), lexeme)))
-                        } else if let Expression::Literal(Token {kind: TokenKind::Keyword(Keyword::False), lexeme}) = result {
+                        } else if let Expression::Literal(Token {kind: TokenKind::Keyword(Keyword::Nil), lexeme}) = result {
                             Ok(Expression::Literal(Token::new(TokenKind::Keyword(Keyword::True), lexeme)))
                         } else if let Expression::Literal(Token {kind: TokenKind::Keyword(Keyword::True), lexeme}) = result {
                             Ok(Expression::Literal(Token::new(TokenKind::Keyword(Keyword::False), lexeme)))
+                        } else if let Expression::Literal(Token {kind: TokenKind::Keyword(Keyword::False), lexeme}) = result {
+                            Ok(Expression::Literal(Token::new(TokenKind::Keyword(Keyword::True), lexeme)))
                         } else {
                             Err("Cannot negate non-number types".into())
                         }

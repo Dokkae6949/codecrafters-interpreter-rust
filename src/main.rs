@@ -101,14 +101,14 @@ fn main() {
                 Ok(expr) => expr,
                 Err(err) => {
                     eprintln!("{}", err);
-                    exit(0);
+                    exit(1);
                 }
             };
             let result = match Evaluator::evaluate(&expression) {
                 Ok(expr) => expr,
                 Err(err) => {
                     eprintln!("{}", err);
-                    exit(0);
+                    exit(2);
                 },
             };
             
