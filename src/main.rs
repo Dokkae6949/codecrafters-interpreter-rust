@@ -93,21 +93,29 @@ fn main() {
             });
 
             let tokens = Lexer::tokenize(&file_contents);
-            let expression = match Parser::parse(tokens) {
-                Some(expr) => expr,
-                None => exit(1)
+            let expression = match Parser::parse(&tokens) {
+                Ok(expr) => expr,
+                Err(err) => {
+                    eprintln!("{}", err);
+                    exit(1);
+                }
             };
-
-            match expression {
-                Expression::Literal(Literal::Nil) => println!("nil"),
-                Expression::Literal(Literal::Bool(bool)) => println!("{}", bool),
-                Expression::Literal(Literal::String(str)) => println!("{}", str),
-                Expression::Literal(Literal::Number(num)) => println!("{}", num),
-            };
+            
+            print_expression(&expression);
         },
         _ => {
             writeln!(io::stderr(), "Unknown command: {}", command).unwrap();
             return;
         }
     }
+}
+
+fn print_expression(expression: &Expression) {
+    match expression {
+        Expression::Literal(Literal::Nil) => println!("nil"),
+        Expression::Literal(Literal::Bool(bool)) => println!("{}", bool),
+        Expression::Literal(Literal::String(str)) => println!("{}", str),
+        Expression::Literal(Literal::Number(num)) => println!("{}", num),
+        Expression::Grouping(expr) => print_expression(expr),
+    };
 }
