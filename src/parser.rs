@@ -27,7 +27,7 @@ impl Parser {
             Some(token) => match &token.kind {
                 TokenKind::Minus
                 | TokenKind::Bang => {
-                    let (rhs_expr, iter) = Self::primary(iter)?;
+                    let (rhs_expr, iter) = Self::unary(iter)?;
                     Ok((Expression::Unary(token.clone(), Box::new(rhs_expr)), iter))
                 },
                 _ => Self::primary(iter),
