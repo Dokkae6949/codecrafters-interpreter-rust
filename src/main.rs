@@ -1,3 +1,4 @@
+mod evaluator;
 mod lexer;
 mod parser;
 
@@ -6,8 +7,11 @@ use std::fs;
 use std::io::{self, Write};
 use std::process::exit;
 
+use evaluator::*;
 use lexer::*;
 use parser::*;
+
+// TODO: Consider switching to custom data type for parser.
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -100,22 +104,29 @@ fn main() {
                     exit(1);
                 }
             };
+            let result = match Evaluator::evaluate(&expression) {
+                Ok(expr) => expr,
+                Err(err) => {
+                    eprintln!("{}", err);
+                    exit(2);
+                },
+            };
             
-            print_expression(&expression);
+            match result {
+                Expression::Literal(token) => match token.kind {
+                    TokenKind::Keyword(Keyword::Nil) => println!("nil"),
+                    TokenKind::Keyword(Keyword::True) => println!("true"),
+                    TokenKind::Keyword(Keyword::False) => println!("false"),
+                    TokenKind::String(str) => println!("{}", str),
+                    TokenKind::Number(num) => println!("{}", num),
+                    _ => {},
+                },
+                _ => {},
+            };
         },
         _ => {
             writeln!(io::stderr(), "Unknown command: {}", command).unwrap();
             return;
         }
     }
-}
-
-fn print_expression(expression: &Expression) {
-    match expression {
-        Expression::Literal(Literal::Nil) => println!("nil"),
-        Expression::Literal(Literal::Bool(bool)) => println!("{}", bool),
-        Expression::Literal(Literal::String(str)) => println!("{}", str),
-        Expression::Literal(Literal::Number(num)) => println!("{}", num),
-        Expression::Grouping(expr) => print_expression(expr),
-    };
 }

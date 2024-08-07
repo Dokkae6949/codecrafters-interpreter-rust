@@ -5,17 +5,10 @@ use crate::lexer::*;
 pub struct Parser;
 
 #[derive(Debug, Clone, PartialEq)]
-pub enum Literal {
-    Nil,
-    Bool(bool),
-    String(String),
-    Number(f64),
-}
-
-#[derive(Debug, Clone, PartialEq)]
 pub enum Expression {
-    Literal(Literal),
+    Literal(Token),
     Grouping(Box<Expression>),
+    Unary(Token, Box<Expression>),
 }
 
 impl Parser {
@@ -26,25 +19,39 @@ impl Parser {
             tokens
         };
 
-        Self::primary(tokens.iter().peekable()).map(|(expr, _)| expr)
+        Self::unary(tokens.iter().peekable()).map(|(expr, _)| expr)
+    }
+
+    fn unary(mut iter: Peekable<Iter<'_, Token>>) -> Result<(Expression, Peekable<Iter<'_, Token>>), String> {
+        match iter.next() {
+            Some(token) => match &token.kind {
+                TokenKind::Minus
+                | TokenKind::Bang => {
+                    let (rhs_expr, iter) = Self::primary(iter)?;
+                    Ok((Expression::Unary(token.clone(), Box::new(rhs_expr)), iter))
+                },
+                _ => Self::primary(iter),
+            },
+            None => Err("Expected Expression".into())
+        }
     }
 
     fn primary(mut iter: Peekable<Iter<'_, Token>>) -> Result<(Expression, Peekable<Iter<'_, Token>>), String> {
         match iter.next() {
             Some(token) => match &token.kind {
                 TokenKind::LeftParen => {
-                    let (expr, mut iter) = Self::primary(iter)?;
+                    let (expr, mut iter) = Self::unary(iter)?;
                     if let Some(Token { kind: TokenKind::RightParen, .. }) = iter.next() {
                         Ok((Expression::Grouping(Box::new(expr)), iter))
                     } else {
                         Err("Expected ')' after expression".into())
                     }
                 },
-                TokenKind::Keyword(Keyword::Nil) => Ok((Expression::Literal(Literal::Nil), iter)),
-                TokenKind::Keyword(Keyword::True) => Ok((Expression::Literal(Literal::Bool(true)), iter)),
-                TokenKind::Keyword(Keyword::False) => Ok((Expression::Literal(Literal::Bool(false)), iter)),
-                TokenKind::String(string) => Ok((Expression::Literal(Literal::String(string.to_string())), iter)),
-                TokenKind::Number(number) => Ok((Expression::Literal(Literal::Number(*number)), iter)),
+                TokenKind::Keyword(Keyword::Nil)
+                | TokenKind::Keyword(Keyword::True)
+                | TokenKind::Keyword(Keyword::False)
+                | TokenKind::String(_)
+                | TokenKind::Number(_) => Ok((Expression::Literal(token.clone()), iter)),
                 _ => Err("Unexpected token".into())
             },
             None => Err("Expected expression".into()),
