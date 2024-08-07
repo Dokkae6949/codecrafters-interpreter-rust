@@ -23,10 +23,11 @@ impl Parser {
     }
 
     fn unary(mut iter: Peekable<Iter<'_, Token>>) -> Result<(Expression, Peekable<Iter<'_, Token>>), String> {
-        match iter.next() {
+        match iter.peek() {
             Some(token) => match &token.kind {
                 TokenKind::Minus
                 | TokenKind::Bang => {
+                    let token = iter.next().unwrap();
                     let (rhs_expr, iter) = Self::unary(iter)?;
                     Ok((Expression::Unary(token.clone(), Box::new(rhs_expr)), iter))
                 },
