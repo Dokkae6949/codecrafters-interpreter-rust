@@ -5,4 +5,5 @@ while (result) {
     if (counter == 10) {
         return nil
     }
+    return 100.00
 }
