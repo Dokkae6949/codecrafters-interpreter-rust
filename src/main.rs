@@ -26,15 +26,13 @@ fn main() {
                 String::new()
             });
 
-            let tokens = match Lexer::tokenize(&file_contents) {
-                Ok(tokens) => tokens,
-                Err(status) => exit(status)
-            };
+            let tokens = Lexer::tokenize(&file_contents);
+            let mut status = 0;
 
             for token in tokens.iter() {
                 match &token.kind {
                     TokenKind::Eof => println!("EOF  null"),
-                    TokenKind::Error(msg) => println!("{}", msg),
+                    TokenKind::Error(msg, status_code) => { println!("{}", msg); status = *status_code; },
                     TokenKind::LeftParen => println!("LEFT_PAREN ( null"),
                     TokenKind::RightParen => println!("RIGHT_PAREN ) null"),
                     TokenKind::LeftBrace => println!("LEFT_BRACE {{ null"),
@@ -85,6 +83,8 @@ fn main() {
                     }
                 }
             }
+
+            exit(status);
         }
         "evaluate" => {
             let file_contents = fs::read_to_string(filename).unwrap_or_else(|_| {
@@ -92,11 +92,7 @@ fn main() {
                 String::new()
             });
 
-            let tokens = match Lexer::tokenize(&file_contents) {
-                Ok(tokens) => tokens,
-                Err(status) => exit(status)
-            };
-
+            let tokens = Lexer::tokenize(&file_contents);
             let expression = match Parser::parse(tokens) {
                 Some(expr) => expr,
                 None => exit(1)
